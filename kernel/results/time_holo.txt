@@ -1,0 +1,11 @@
+# Output of: python kernel/profiling/time_holo.py
+# B=128, d_model=64, heads=4, edge_scale=1.5, causal + tril mask
+# "attn ms" = full - geom (geometry timed in a separate loop), so small or
+# negative values are timing noise; the signal is that geometry dominates.
+device = cuda
+    L   full ms   geom ms   attn ms  geom %  attn %
+    7    19.746    14.743     5.003   74.7%   25.3%
+   14    19.051    22.101    -3.050  116.0%  -16.0%
+   21    20.126    17.951     2.174   89.2%   10.8%
+   32    27.988    28.878    -0.890  103.2%   -3.2%
+   64    48.348    40.492     7.856   83.8%   16.2%

@@ -1,0 +1,17 @@
+# Output of: python kernel/profiling/exp_compare.py
+# matrix_exp alternatives vs torch.matrix_exp (skew matrices built outside the timer)
+d=16, edge_scale=1.5, n_matrices=1024, dtype=torch.float32
+typical ||A|| (max abs entry): 7.065
+
+approach                   max_err        ms   speedup
+reference (matrix_exp)    0.00e+00     1.231     1.00x
+taylor K=4                4.78e+02     0.310     3.97x
+taylor K=6                2.43e+03     0.454     2.71x
+taylor K=8                6.54e+03     0.599     2.06x
+taylor K=10               1.22e+04     0.741     1.66x
+taylor K=12               1.51e+04     0.885     1.39x
+scalesq K=6 s=1           2.37e+03     0.384     3.21x
+scalesq K=6 s=2           1.71e+00     0.368     3.35x
+scalesq K=8 s=2           1.61e-01     0.457     2.70x
+scalesq K=4 s=3           2.26e-01     0.307     4.00x
+eigh                      3.14e-06     2.290     0.54x

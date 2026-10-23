@@ -1,0 +1,61 @@
+# Output of: python kernel/eval_checkpoint_kernel.py --all
+# GPU: <FILL IN from nvidia-smi>   torch: <FILL IN>   triton: <FILL IN>
+
+================================================================
+1. CORRECTNESS  (kernel vs reference: same output + same grads)
+================================================================
+  L=   8  max|dy|=1.19e-07  max|d(grad)|=4.92e-07  OK
+  L=  16  max|dy|=1.19e-07  max|d(grad)|=9.54e-07  OK
+  L=  32  max|dy|=1.19e-07  max|d(grad)|=1.28e-06  OK
+  L=  64  max|dy|=1.04e-07  max|d(grad)|=1.64e-06  OK
+  CORRECTNESS: ALL OK -- kernel matches reference
+
+================================================================
+2. SPEED  (ms/forward; lower=better; watch the trend with L)
+================================================================
+  batch=8, d_model=64, heads=4
+       L    ref_fwd    ker_fwd  fwd_speedup    ref_f+b    ker_f+b  f+b_speedup
+      32     15.544     14.452        1.08x     83.761    116.137        0.72x
+      64     20.484     16.790        1.22x     99.617    103.046        0.97x
+     128     22.421     24.160        0.93x    146.216    116.497        1.26x
+     256     32.866     30.692        1.07x    221.212    184.315        1.20x
+     512     54.734     59.287        0.92x    463.804    451.154        1.03x
+
+================================================================
+3. MEMORY  (peak MB during forward; lower=better)
+================================================================
+       L     ref_MB     ker_MB   ratio(ref/ker)
+      32       33.1       33.1            1.00x
+      64       46.7       46.7            1.00x
+     128       74.1       74.1            1.00x
+     256      128.3      128.3            1.00x
+     512      238.3      238.3            1.00x
+
+================================================================
+4. TASK  (checkpoint experiment: kernel-holo accuracy)
+================================================================
+  running holo with KERNEL impl ...
+    [kernel] ep 1/30 val_acc=0.585 best=0.585
+    [kernel] ep 5/30 val_acc=0.688 best=0.688
+    [kernel] ep 10/30 val_acc=0.747 best=0.747
+    [kernel] ep 15/30 val_acc=0.750 best=0.763
+    [kernel] ep 20/30 val_acc=0.780 best=0.780
+    [kernel] ep 25/30 val_acc=0.781 best=0.783
+    [kernel] ep 30/30 val_acc=0.788 best=0.792
+  === kernel-holo accuracy by length ===
+    len= 16 (train)   acc=0.800
+    len= 32 (extrap)  acc=0.771
+    len= 64 (extrap)  acc=0.768
+  running holo with REFERENCE impl (for parity check) ...
+    [reference] ep 1/30 val_acc=0.598 best=0.598
+    [reference] ep 5/30 val_acc=0.678 best=0.678
+    [reference] ep 10/30 val_acc=0.746 best=0.746
+    [reference] ep 15/30 val_acc=0.752 best=0.752
+    [reference] ep 20/30 val_acc=0.771 best=0.771
+    [reference] ep 25/30 val_acc=0.784 best=0.784
+    [reference] ep 30/30 val_acc=0.782 best=0.796
+  === kernel vs reference holo (should be CLOSE) ===
+      len    kernel  reference     diff
+       16     0.800      0.805    0.005
+       32     0.771      0.782    0.011
+       64     0.768      0.771    0.003

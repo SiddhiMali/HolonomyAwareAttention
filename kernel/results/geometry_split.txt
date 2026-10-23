@@ -1,0 +1,10 @@
+# Output of: python kernel/profiling/geometry_split.py
+# NOTE: the "so_exp" column times so_exp(skew_from_vec(a)), i.e. skew-matrix
+# construction AND matrix_exp together. See skew_test.py to separate them.
+edge_scale=1.5, B=8, D=64, heads=4
+
+    L  edge_mlp    so_exp    prefix     total   mlp%   exp%  scan%
+   16     0.220    12.367     1.779    14.366     2%    86%    12%
+   32     0.299    10.232     3.430    13.961     2%    73%    25%
+   64     0.244    12.198     4.763    17.206     1%    71%    28%
+  128     0.249    10.391     8.716    19.356     1%    54%    45%

@@ -1,0 +1,24 @@
+# Output of: python kernel/profiling/profile_attention.py
+# attention_fast (vectorized) vs attention.py (original). A separate earlier run
+# measured 12.6x / 40.9x / 104.5x at L=16/32/64 (run-to-run variance).
+equivalence checks (dense mask):
+[causal] L=  4 max|dy|=2.16e-07 max|dattn|=8.94e-08 max|dH|=0.00e+00 OK
+[causal] L=  8 max|dy|=2.09e-07 max|dattn|=7.45e-08 max|dH|=0.00e+00 OK
+[causal] L= 16 max|dy|=2.38e-07 max|dattn|=1.49e-07 max|dH|=0.00e+00 OK
+[causal] L= 32 max|dy|=3.35e-07 max|dattn|=2.46e-07 max|dH|=0.00e+00 OK
+[inert ] L=  4 max|dy|=0.00e+00 max|dattn|=0.00e+00 max|dH|=0.00e+00 OK
+[inert ] L=  8 max|dy|=8.94e-08 max|dattn|=5.96e-08 max|dH|=0.00e+00 OK
+[inert ] L= 16 max|dy|=5.96e-08 max|dattn|=8.94e-08 max|dH|=0.00e+00 OK
+[inert ] L= 32 max|dy|=5.96e-08 max|dattn|=2.24e-08 max|dH|=0.00e+00 OK
+equivalence checks (ring mask):
+[causal] L=  8 max|dy|=2.09e-07 max|dattn|=7.45e-08 max|dH|=0.00e+00 OK
+[causal] L= 16 max|dy|=2.38e-07 max|dattn|=1.49e-07 max|dH|=0.00e+00 OK
+[causal] L= 32 max|dy|=3.35e-07 max|dattn|=2.46e-07 max|dH|=0.00e+00 OK
+[inert ] L=  8 max|dy|=8.94e-08 max|dattn|=5.96e-08 max|dH|=0.00e+00 OK
+[inert ] L= 16 max|dy|=5.96e-08 max|dattn|=8.94e-08 max|dH|=0.00e+00 OK
+[inert ] L= 32 max|dy|=5.96e-08 max|dattn|=2.24e-08 max|dH|=0.00e+00 OK
+=== throughput  mode=causal  B=4 D=64 H=8 ===
+    L     ref ms    fast ms   speedup
+   16      80.93       7.07     11.4x
+   32     653.68      18.97     34.5x
+   64    5081.87      62.29     81.6x
